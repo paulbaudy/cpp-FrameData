@@ -12,7 +12,7 @@ endif()
 project ("FrameData")
 
 # Ajoutez une source à l'exécutable de ce projet.
-add_executable (FrameData "FrameData.cpp" "FrameData.h")
+add_executable (FrameData "FrameData.cpp" "include/FrameData.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET FrameData PROPERTY CXX_STANDARD 20)

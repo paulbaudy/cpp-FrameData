@@ -1,12 +1,16 @@
-﻿// FrameData.cpp : définit le point d'entrée de l'application.
-//
+﻿/*!
+ *  @file FrameData.h
+ *  @author Paul
+ *  @date 2024-11-25
+ *
+ *  Frame data unit testing
+ */
 
-#include "FrameData.h"
-
-using namespace std;
+#include <iostream>
+#include "include/FrameData.h"
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	std::cout << "Hello CMake." << std::endl;
 	return 0;
 }
