@@ -23,7 +23,7 @@ namespace Memory
 #ifdef _MSC_VER
 		return _aligned_malloc(InSize, InAlign);
 #else
-		return std::aligned_alloc(InAlign, InSize);
+		return aligned_alloc(InAlign, InSize);
 #endif
 	}
 }
