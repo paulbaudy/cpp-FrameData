@@ -108,12 +108,21 @@ public:
 	FFrameData(const FFrameData&) = delete;
 	FFrameData& operator=(const FFrameData&) = delete;
 
-
-	FFrameData(FFrameData&& Other)
+	FFrameData(FFrameData&& InOther)
+		: Chunks(std::move(InOther.Chunks))
+		, TypeMap(std::move(InOther.TypeMap))
+		, Head(InOther.Head)
+		, ChunkHead(InOther.ChunkHead)
+		, ChunkSize(InOther.ChunkSize)
 	{
-		// TODO Move
-		ChunkSize = Other.ChunkSize;
+		InOther.Chunks.clear();
 	}
+
+	~FFrameData()
+	{
+		Clear(0);
+	}
+
 public:
 
 	template<class T>
@@ -137,7 +146,7 @@ public:
 	}
 
 	template<class T>
-	TIteratorRange<const T>  Data() const
+	[[nodiscard]] TIteratorRange<const T> Data() const
 	{
 		if (auto Search = TypeMap.find(TTypeIndex<T>::Value); Search != TypeMap.end())
 		{
@@ -148,15 +157,33 @@ public:
 		return TIteratorRange<const T>();
 	}
 
-	void Clear(size_t Slack = 0)
+	void Clear(size_t InSlack = 0)
 	{
 		Head = 0;
 		ChunkHead = 0;
 		TypeMap.clear();
+
+		if (InSlack < Chunks.size())
+		{
+			// remove N last chunks
+			for (size_t i = InSlack; i < Chunks.size(); ++i)
+				std::free(Chunks[i]);
+
+			Chunks.resize(InSlack);
+		}
+		else
+		{
+			const size_t BaseCount = Chunks.size();
+			Chunks.resize(InSlack);
+
+			// allocate N new chunks
+			for (size_t i = BaseCount; i < InSlack; ++i)
+				Chunks[i] = _aligned_malloc(ChunkSize, ChunkAlignment);
+		}
 	}
 
 private:
-	void* Allocate(size_t InSize, size_t InAlign)
+	[[nodiscard]] void* Allocate(size_t InSize, size_t InAlign)
 	{
 		if (Chunks.size() == 0)
 		{
