@@ -7,10 +7,11 @@
  */
 #pragma once
 
-#include <type_traits>
+#include <cstdlib>
 #include <vector>
 #include <unordered_map>
-#include <cstdlib>
+#include <string>
+#include <type_traits>
 
 #ifndef __FUNCSIG__
 #define __FUNCSIG__ __PRETTY_FUNCTION__
