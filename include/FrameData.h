@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <vector>
 #include <unordered_map>
-#include <string>
+#include <string_view>
 #include <type_traits>
 
 #ifndef __FUNCSIG__
@@ -42,7 +42,7 @@ namespace Details
 	template<typename T>
 	static constexpr uint64_t ComputeHash()
 	{
-		std::string TypeStr = __FUNCSIG__;
+		constexpr std::string_view TypeStr = __FUNCSIG__;
 		uint64_t Hash = 0xCBF29CE484222325;
 		const uint64_t Prime = 0x100000001B3;
 
