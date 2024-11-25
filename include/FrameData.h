@@ -11,6 +11,10 @@
 #include <vector>
 #include <unordered_map>
 
+#ifndef __FUNCSIG__
+#define __FUNCSIG__ __PRETTY_FUNCTION__
+#endif
+
 namespace Details
 {
 	template <typename T>
