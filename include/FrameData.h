@@ -10,10 +10,23 @@
 #include <type_traits>
 #include <vector>
 #include <unordered_map>
+#include <cstdlib>
 
 #ifndef __FUNCSIG__
 #define __FUNCSIG__ __PRETTY_FUNCTION__
 #endif
+
+namespace Memory
+{
+	inline void* AlignedAlloc(std::size_t InSize, std::size_t InAlign)
+	{
+#ifdef _MSC_VER
+		return _aligned_malloc(InSize, InAlign);
+#else
+		return std::aligned_alloc(InAlign, InSize);
+#endif
+	}
+}
 
 namespace Details
 {
@@ -182,7 +195,7 @@ public:
 
 			// allocate N new chunks
 			for (size_t i = BaseCount; i < InSlack; ++i)
-				Chunks[i] = _aligned_malloc(ChunkSize, ChunkAlignment);
+				Chunks[i] = Memory::AlignedAlloc(ChunkSize, ChunkAlignment);
 		}
 	}
 
@@ -219,7 +232,7 @@ private:
 
 	inline void PushChunk()
 	{
-		Chunks.push_back(_aligned_malloc(ChunkSize, ChunkAlignment));
+		Chunks.push_back(Memory::AlignedAlloc(ChunkSize, ChunkAlignment));
 	}
 
 private:
